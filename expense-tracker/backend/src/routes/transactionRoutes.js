@@ -1,8 +1,8 @@
 import express from 'express';
 const router = express.Router();
-import {addTransaction, deleteTransaction, editTransaction} from '../controllers/transactionController';
-import requireAuth from '../middleware/authMiddleware';
-import { getSummary, categoryExpense } from '../controllers/analyticsController';
+import {addTransaction, deleteTransaction, editTransaction} from '../controllers/transactionController.js';
+import requireAuth from '../middleware/authMiddleware.js';
+import { getSummary, categoryExpense } from '../controllers/analyticsController.js';
 
 router.post('/addTransaction', requireAuth, addTransaction);
 router.delete('/deleteTransaction/:id', requireAuth, deleteTransaction);

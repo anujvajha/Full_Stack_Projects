@@ -1,4 +1,4 @@
-import Transaction from '../models/transactionModel';
+import Transaction from '../models/transactionModel.js';
 import mongoose from 'mongoose'
 
 const getSummary = async (req, res) =>

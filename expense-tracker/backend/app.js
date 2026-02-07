@@ -2,8 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv'
 dotenv.config()
 import cookieParser from 'cookie-parser';
-import authRoutes from './src/routes/authRoutes';
-import transactionRoutes from './src/routes/transactionRoutes';
+// import authRoutes from './src/routes/authRoutes.js';
+// import transactionRoutes from './src/routes/transactionRoutes.js';
 import mongoose from 'mongoose';
 
 
@@ -12,8 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(authRoutes);
-app.use(transactionRoutes);
+// app.use(authRoutes);
+// app.use(transactionRoutes);
 
 mongoose.connect(process.env.DB_CONNECTION)
     .then(() => 
@@ -28,3 +28,4 @@ mongoose.connect(process.env.DB_CONNECTION)
         console.log("Db connection failed", err);
     })
 
+app.get('/', (req, res) => res.send("Hello"));
