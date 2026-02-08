@@ -13,7 +13,7 @@ const transactionSchema = new mongoose.Schema
     type: 
     {
       type: String,
-      enum: ["income", "expense"],
+      enum: ["Income", "Expense"],
       required: true
     },
 
@@ -34,6 +34,7 @@ const transactionSchema = new mongoose.Schema
     date: 
     {
       type: Date,
+      default: Date.now,
       required: true
     },
 

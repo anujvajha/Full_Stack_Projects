@@ -1,40 +1,34 @@
+import mongoose from 'mongoose';
 import Transaction from '../models/transactionModel.js';
-import mongoose from 'mongoose'
-
 const getSummary = async (req, res) =>
 {
     try 
     {
         const userId = req.userId;
-        const result = await Transaction.aggregate
-        (
-            [   
-                {
-                    $match:
-                    {
-                        user : new mongoose.Types.ObjectId(userId)
-                    }
-                },
 
+        const result = await Transaction.aggregate([
+            {
+                $match: 
                 {
-                    $group:
-                    {
-                        _id: $type,
-                        total: 
-                        {
-                            $sum: "amount"
-                        }
-                    }
+                    user: new mongoose.Types.ObjectId(userId)
                 }
-            ]
-        );
+            },
+            {
+                $group: 
+                {
+                    _id: "$type",
+                    total: { $sum: "$amount" }
+                }
+            }
+        ]);
+
         res.status(200).json(result);
     }
     catch (err)
     {
-        res.status(500).json({error: "Analytics failed"});
+        res.status(500).json({ error: "Analytics failed" });
     }
-}
+};
 
 const categoryExpense = async (req, res) =>
 {
@@ -42,23 +36,17 @@ const categoryExpense = async (req, res) =>
     {
         const userId = req.userId;
 
-        const result = await Transaction.aggregate(
-        [
+        const result = await Transaction.aggregate([
             {
-                $match:
-                {
+                $match: {
                     user: new mongoose.Types.ObjectId(userId),
-                    type: "expense"
+                    //type: "Expense"
                 }
             },
             {
-                $group:
-                {
+                $group: {
                     _id: "$category",
-                    total:
-                    {
-                        $sum: "$amount"
-                    }
+                    total: { $sum: "$amount" }
                 }
             }
         ]);
@@ -71,5 +59,4 @@ const categoryExpense = async (req, res) =>
     }
 };
 
-
-export {getSummary, categoryExpense};
+export {categoryExpense, getSummary};

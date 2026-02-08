@@ -14,14 +14,14 @@ const Logout = () => {
                 await axios.get("http://localhost:5001/logout", { withCredentials: true });
                 setTimeout(() => 
                 {
-                    navigate("/");
+                  navigate("/");
                     
                 }, 400);
 
             } 
             catch (err) 
             {
-                console.error("Logout failed", err);
+              console.error("Logout failed", err);
             }
         };
 

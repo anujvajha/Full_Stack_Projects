@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import isEmail from 'validator';
+import validator from 'validator';
 const userSchema = new mongoose.Schema
 (
     {
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema
             type: String,
             required: true,
             unique: true,
-            validate: isEmail,
+            validate: validator.isEmail,
             trim: true,
             lowercase: true
         },
@@ -28,12 +28,11 @@ const userSchema = new mongoose.Schema
     }
 );
 
-userSchema.pre('save', async function (next) 
+userSchema.pre('save', async function () 
 {
-    if (!this.isModified('password')) return next();
+    if (!this.isModified('password')) return;
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
-    next();
 });
 
 const userModel = mongoose.model('user', userSchema);

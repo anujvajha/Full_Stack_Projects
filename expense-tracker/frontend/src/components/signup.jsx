@@ -21,6 +21,10 @@ const handleSubmit = async (e) =>
     }
     catch (err)
     {
+      console.log("FULL ERROR:", err);
+      console.log("RESPONSE DATA:", err.response?.data);
+      console.log("STATUS:", err.response?.status);
+      console.log(err);
       console.log("Signup not successful", err.message);
     }
 };
