@@ -18,7 +18,7 @@ const post_signup = async (req, res) =>
     {
         const {name, email, password} = req.body;
         const user = await User.create({name, email, password});
-
+        if(!name || !email || !password) return res.status(400).json({message: "All fields are required"});
         if(user)
         {
             const token = createToken(user._id);
@@ -34,14 +34,12 @@ const post_signup = async (req, res) =>
         }
         else 
         {
-            
-            res.status(400).json({ error: err.message });
+            res.status(400).json({ message: "Signup failed" });
         }
     }
     catch (err)
     {
-        console.log("🔥 SIGNUP ERROR FULL:", err);
-        res.status(400).json({error: "Signup failed"});
+        res.status(500).json({ message: "Internal Error" });
     }
 }
 
@@ -51,6 +49,7 @@ const post_login = async (req, res) =>
     {
         const {email, password} = req.body;
         const user = await User.findOne({email});
+        if(!email || !password) return res.status(400).json({message: "All fields are required"});
 
         if(user)
         {
@@ -70,17 +69,17 @@ const post_login = async (req, res) =>
             }
             else 
             {
-                res.status(401).json({error: "Wrong password"});
+                res.status(401).json({ message: "Wrong password" });
             }
         }
         else 
         {
-            res.status(401).json({error: "Wrong email"});
+            res.status(401).json({ message: "Wrong email" });
         }
     }
     catch (err)
     {
-        res.status(401).json({error: "Login failed"});
+        res.status(500).json({ message:"Internal Error" });
     }
 }
 
@@ -100,7 +99,7 @@ const get_logout = (req, res) =>
     }
     catch (err)
     {
-        res.status(500).json({error: "Logout unsuccessful"});
+        res.status(500).json({message: "Logout unsuccessful"});
     }
 }
 
@@ -118,12 +117,12 @@ const editProfile = async (req, res) =>
         }
         else 
         {
-            res.status(404).json({error: "Couldnt edit user profile"});
+            res.status(404).json({message: "User not found"});
         }
     }
     catch (err)
     {
-        res.status(500).json({error: "Couldnt edit user profile"});
+        res.status(500).json({message: "Couldnt edit user profile"});
     }
 }
 
@@ -145,17 +144,17 @@ const editPassword = async (req, res) =>
             }
             else 
             {
-                return res.status(401).json({ error: "Current password incorrect" });
+                return res.status(401).json({ message: "Current password incorrect" });
             }
         }
         else 
         {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ message: "User not found" });
         }
     }
     catch (err)
     {
-        res.status(500).json({ error: "Could not update password" });
+        res.status(500).json({ message: "Could not update password" });
     }
 }
 
@@ -164,15 +163,13 @@ const getMe = async (req, res) =>
     try
     {
         const user = await User.findById(req.userId).select("-password");
-        if (!user) return res.status(404).json({ error: "User not found" });
+        if (!user) return res.status(404).json({ message: "User not found" });
         res.status(200).json(user);
     }
     catch (err)
     {
-        res.status(500).json({ error: "Could not fetch user" });
+        res.status(500).json({ message: err.message || "Could not fetch user" });
     }
 }
-
-
 
 export {post_signup, post_login, get_logout, editProfile, editPassword, getMe};

@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useState } from "react";
 
 const Logout = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   useEffect(() => 
    {
@@ -19,9 +21,10 @@ const Logout = () => {
                 }, 400);
 
             } 
-            catch (err) 
+            catch (err)
             {
-              console.error("Logout failed", err);
+                const message = "Couldnt Log Out";
+                setError(message);
             }
         };
 
@@ -29,9 +32,11 @@ const Logout = () => {
     }, [navigate]);
 
   return (
-    <div className="logout">
-      <h2>Logging out...</h2>
+    <div className="flex items-center justify-center min-h-screen bg-black text-gray-100">
+      {error && <p className="text-red-400 text-lg font-medium">{error}</p>}
+      {!error && <h2 className="text-xl font-semibold animate-pulse">Logging out...</h2>}
     </div>
+
   );
 };
 

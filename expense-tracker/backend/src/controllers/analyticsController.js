@@ -26,7 +26,7 @@ const getSummary = async (req, res) =>
     }
     catch (err)
     {
-        res.status(500).json({ error: "Analytics failed" });
+        res.status(500).json({ message: err.message || "Analytics failed" });
     }
 };
 
@@ -55,7 +55,7 @@ const categoryExpense = async (req, res) =>
     }
     catch (err)
     {
-        res.status(500).json({ error: "Category analytics failed" });
+        res.status(500).json({ message: err.message || "Category analytics failed" });
     }
 };
 

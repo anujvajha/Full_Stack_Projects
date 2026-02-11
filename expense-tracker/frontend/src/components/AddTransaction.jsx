@@ -8,7 +8,9 @@ const AddTransaction = () => {
     const [amount, setAmount] = useState("");
     const [date, setDate] = useState("");
     const [type, setType] = useState("Income");
+    const [note, setNote] = useState("");
     const [id, setId] = useState(null);
+    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -29,9 +31,10 @@ const AddTransaction = () => {
     const handleSubmit = async (e) => 
     {
         e.preventDefault();
+        setError(null);
         try 
         {
-            const transaction = {type, category, amount: Number(amount), date};
+            const transaction = {type, category, amount: Number(amount), date, note};
             if (id)
             {
                 const res = await axios.patch(`http://localhost:5001/editTransaction/${id}`, transaction, { withCredentials: true } );
@@ -41,6 +44,7 @@ const AddTransaction = () => {
                     setType("Income");
                     setCategory("");
                     setAmount("");
+                    setNote(note);
                     setDate("");
                     navigate("/");
                 }
@@ -53,31 +57,41 @@ const AddTransaction = () => {
         }
         catch (err)
         {
-            console.log("Couldnt Add Transaction", err);
+            const message = "Couldnt add transaction";
+            setError(message);
         }
     }
 
     return ( 
-        <div className="addexpense-form">
-            <form onSubmit={handleSubmit}>
+        <div className="addexpense-form flex  justify-center mt-2 bg-black text-gray-100">
+            <form onSubmit={handleSubmit} className="flex flex-col w-125 p-8 space-y-5 bg-zinc-900 rounded-xl shadow-md border border-zinc-800">
+                {error && <p className="text-red-400">{error}</p>}
+                
                 <label><b>Type</b></label>
-                <select value={type} onChange={(e) => setType(e.target.value)}>
+                <select value={type} onChange={(e) => setType(e.target.value)} className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="Income">Income</option>
                     <option value="Expense">Expense</option>
                 </select>
 
                 <label><b>Category</b></label>
-                <input type="text" placeholder="Enter Category" value={category} onChange={(e) => setCategory(e.target.value)}></input>
+                <input type="text" placeholder="Enter Category" value={category} onChange={(e) => setCategory(e.target.value)} className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></input>
 
                 <label><b>Amount</b></label>
-                <input type="number" placeholder="Enter Amount" value={amount} onChange={(e) => setAmount(e.target.value)}></input>
+                <input type="number" placeholder="Enter Amount" value={amount} onChange={(e) => setAmount(e.target.value)} className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></input>
 
                 <label><b>Date</b></label>
-                <input type="date" placeholder="Enter Date" value={date} onChange={(e) => setDate(e.target.value)}></input>
+                <input type="date" placeholder="Enter Date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></input>
 
-                <button type="submit">{id ? "Edit Transaction" : "Add Transaction"}</button>
+                <label><b>Description</b></label>
+                <textarea type="string" placeholder="Enter Description" value={note} onChange={(e) => setNote(e.target.value)} className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+
+                <button type="submit" className="bg-blue-900 text-white p-3 rounded-lg hover:bg-blue-700 transition">
+                    {id ? "Edit Transaction" : "Add Transaction"}
+                </button>
             </form>
         </div>
+
+
      );
 }
  

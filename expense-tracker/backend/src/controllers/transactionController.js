@@ -6,13 +6,13 @@ const addTransaction = async (req, res) =>
     {
         const userId = req.userId;
         const {type, amount, category, date, note} = req.body;
+        if(!type || !amount || !category || !date) return res.status(400).json({message: "All fields are required"});
         const transaction = await Transaction.create({user: userId, type, amount, category, date, note});
         if(transaction) res.status(201).json({transaction: transaction._id});
-        else res.status(400).json({error: "Couldnt add transaction"});
     }
     catch (err)
     {
-        res.status(400).json({error: "Couldnt add transaction"});
+        res.status(500).json({message: "Couldnt add transaction"});
     }
 }
 
@@ -23,20 +23,20 @@ const editTransaction = async (req, res) =>
         const id = req.params.id;
         const userId = req.userId;
         const {type, amount, category, date, note} = req.body;
-
+        if(!type || !amount || !category || !date) return res.status(400).json({message: "All fields are required"});
         const transaction = await Transaction.findOneAndUpdate({_id: id, user: userId}, {type, amount, category, date, note});
         if(transaction)
         {
-            res.status(200).json({transaction: transaction._id});
+            res.status(200).json({message: "Transaction edited successfully"});
         }
         else 
         {
-            res.status(404).json({error: "Couldnt edit transaction"});
+            res.status(404).json({message : "Couldnt edit transaction"});
         }
     }
     catch (err)
     {
-        res.status(500).json({error: "Couldnt edit transaction"});
+        res.status(500).json({message: err.message || "Couldnt edit transaction"});
     }
 }
 
@@ -47,12 +47,12 @@ const deleteTransaction = async (req, res) =>
         const id = req.params.id;
         const userId = req.userId;
         const transaction = await Transaction.findOneAndDelete({_id: id, user: userId});
-        if(transaction) res.status(200).json({transaction: transaction._id});
-        else res.status(400).json({error: "Couldnt delete transaction"});
+        if(transaction) return res.status(200).json({transaction: transaction._id});
+        else return res.status(400).json({message: "Couldnt delete transaction"});
     }
     catch (err)
     {
-        res.status(404).json({error: "Couldnt delete transaction"});
+        res.status(500).json({message: "Couldnt delete transaction"});
     }
 }
 
@@ -62,14 +62,12 @@ const display = async (req, res) =>
     {
         const userId = req.userId;
         const allTransactions = await Transaction.find({user: userId});
-        if(allTransactions)
-        {
-            res.status(200).json(allTransactions);
-        }
+        res.status(200).json(allTransactions);
+        
     }
     catch (err)
     {
-        res.status(500).json({error: "couldnt find transactions"});
+        res.status(500).json({message:"Couldnt find transactions"});
     }
 }
 

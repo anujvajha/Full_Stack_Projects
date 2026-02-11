@@ -7,6 +7,7 @@ const Home = () => {
     const [transactions, setTransactions] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
 
     useEffect (() => 
     {
@@ -23,7 +24,8 @@ const Home = () => {
             }
             catch (err)
             {
-                console.log(err.message);
+                const message = "Couldnt fetch transactions!";
+                setError(message);
                 setIsLoggedIn(false);
             }
         }
@@ -44,7 +46,8 @@ const Home = () => {
         }
         catch (err)
         {
-            console.log(err.message);
+            const message = "Couldnt Delete the transaction";
+            setError(message);
         }
     }
 
@@ -55,30 +58,31 @@ const Home = () => {
 
 
     return ( 
-        <div>
-            {!isLoggedIn && <h1>Please login / signup to view the transactions!</h1>}
-            {transactions.length!=0 && <h1>Your Transactions</h1>}
-            {isLoggedIn && transactions.length==0 && <h1>Please add a transaction to see the summary!</h1>}
+        <div className="max-w-2xl mx-auto mt-8 px-6 text-gray-100">
+            {error && <p className="text-red-400 mb-4">{error}</p>}
+            {!isLoggedIn && <h1 className="text-xl font-semibold text-center text-gray-300">Please login / signup to view the transactions!</h1>}
+            {transactions.length!=0 && <h1 className="text-2xl font-bold mb-6 text-blue-500 text-center">Your Transactions</h1>}
+            {isLoggedIn && transactions.length==0 && <h1 className="text-xl font-semibold text-center text-gray-300">Please add a transaction to see the summary!</h1>}
 
             { transactions.length!=0 && 
                 transactions.map((transaction) => 
                 (
-                    <div key={transaction._id}>
-                        <h2><b>Category :- </b>{transaction.category}</h2>
-                        <h2><b>Amount :- </b>Rs.{transaction.amount}</h2>
-                        <h2><b>Date:- </b> {new Date(transaction.date).toLocaleDateString()}</h2>
-
-                        <div>
-                            <button onClick={() => handleEdit(transaction)}>Edit</button>
-                            <button onClick={() => handleDelete(transaction._id)}>Delete</button>
+                    <div key={transaction._id} className="bg-zinc-900 p-6 rounded-xl shadow-md mb-6 border border-zinc-800">
+                        <h2 className="mb-2"><b>Category :- </b>{transaction.category}</h2>
+                        <h2 className="mb-2"><b>Amount :- </b>Rs.{transaction.amount}</h2>
+                        <h2 className="mb-4"><b>Date:- </b> {new Date(transaction.date).toLocaleDateString()}</h2>
+                        <h2 className="mb-2"><b>Description:- </b>{transaction.note}</h2>
+                        <div className="flex gap-4">
+                            <button onClick={() => handleEdit(transaction)} className="bg-blue-900 px-4 py-2 rounded-lg hover:bg-blue-700 transition">Edit</button>
+                            <button onClick={() => handleDelete(transaction._id)} className="bg-red-800 px-4 py-2 rounded-lg hover:bg-red-600 transition">Delete</button>
                         </div>
-
                     </div>
                 ))
             }
             {transactions.length !== 0 && <SummaryChart />}
 
         </div>
+
      );
 }
  

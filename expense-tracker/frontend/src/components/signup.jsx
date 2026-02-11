@@ -8,6 +8,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
 const handleSubmit = async (e) => 
 {
@@ -21,25 +22,26 @@ const handleSubmit = async (e) =>
     }
     catch (err)
     {
-      console.log("FULL ERROR:", err);
-      console.log("RESPONSE DATA:", err.response?.data);
-      console.log("STATUS:", err.response?.status);
-      console.log(err);
-      console.log("Signup not successful", err.message);
+        const message = "Please login to view transactions";
+        setError(message);
     }
 };
 
   return (
-    <div className='signup'>
-      <form onSubmit={handleSubmit}>
+    <div className='flex justify-between align-middle'>
+      <form onSubmit={handleSubmit} className='flex flex-col justify-between w-80 mx-auto p-6 shadow space-y-4 bg-zinc-900 border-zinc-800 rounded-xl text-zinc-100 mt-32'>
+        {error && <p className='text-red-400'>{error}</p>}
         <label><b>Name</b></label>
-        <input type="text" placeholder="Enter Name" value={name} onChange={e => setName(e.target.value)} />
+        <input type="text" placeholder="Enter Name" value={name} onChange={e => setName(e.target.value)} className='bg-zinc-800 text-zinc-100 border border-zinc-700 p-3 rounded placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600' />
         <label><b>Email</b></label>
-        <input type="email" placeholder="Enter Email" value={email} onChange={e => setEmail(e.target.value)} />
+        <input type="email" placeholder="Enter Email" value={email} onChange={e => setEmail(e.target.value)} className='bg-zinc-800 text-zinc-100 border border-zinc-700 p-3 rounded placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600' />
         <label><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" value={password} onChange={e => setPassword(e.target.value)} />
-        <button>Sign Up</button>
+        <input type="password" placeholder="Enter Password" value={password} onChange={e => setPassword(e.target.value)} className='bg-zinc-800 text-zinc-100 border border-zinc-700 p-3 rounded placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600' />
+        <button className='bg-blue-900 text-white p-3 rounded hover:bg-blue-700 transition'>Sign Up</button>
       </form>
+
+
+
     </div>
   );
 };

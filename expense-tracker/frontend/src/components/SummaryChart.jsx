@@ -50,10 +50,11 @@ const SummaryChart = () => {
   };
 
   return (
-    <div style={{ width: "400px", margin: "0 auto" }}>
-      <h2>Category Expense Chart</h2>
-      <Doughnut data={chartData} />
-    </div>
+    <div className="w-72 mx-auto mt-8 p-4 rounded-xl shadow-md text-zinc-100 text-center">
+      <h2 className="text-lg font-semibold mb-4 text-blue-500">Category Expense Chart</h2>
+      <Doughnut data={chartData} style={{ width: "200px", height: "200px", margin: "0 auto" }}/>
+      </div>
+
   );
 };
 
