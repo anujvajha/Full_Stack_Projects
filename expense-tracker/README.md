@@ -22,7 +22,6 @@ npm install
 npm start
 
 ### Backend
-```bash
 cd backend
 npm install
 npm start
