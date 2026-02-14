@@ -1,4 +1,4 @@
-# 💰 Personal Finance Tracker
+# 💰 Personal Expense Tracker
 
 Track your income and expenses, visualize your spending, and manage transactions effortlessly!  
 
