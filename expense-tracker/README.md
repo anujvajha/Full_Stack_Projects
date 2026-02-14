@@ -13,7 +13,7 @@ Track your income and expenses, visualize your spending, and manage transactions
 - **Backend:** Node.js + Express.js  
 - **Database:** MongoDB Atlas  
 
-## Install and Run
+## ⬇️ Install and Run
 
 ```bash
 #BackEnd
