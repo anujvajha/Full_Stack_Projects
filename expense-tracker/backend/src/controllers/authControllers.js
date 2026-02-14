@@ -18,7 +18,6 @@ const post_signup = async (req, res) =>
     {
         const {name, email, password} = req.body;
         const user = await User.create({name, email, password});
-        if(!name || !email || !password) return res.status(400).json({message: "All fields are required"});
         if(user)
         {
             const token = createToken(user._id);
@@ -34,13 +33,32 @@ const post_signup = async (req, res) =>
         }
         else 
         {
-            res.status(400).json({ message: "Signup failed" });
+            res.status(400).json({ errors: { general: "Signup failed!" } });
         }
     }
     catch (err)
     {
-        res.status(500).json({ message: "Internal Error" });
+        if (err.name === "ValidationError")
+        {
+            const errors = {};
+
+            Object.values(err.errors).forEach(e =>
+            {
+                errors[e.path] = e.message;
+            });
+
+            return res.status(400).json({ errors});
+        }
+        if (err.code === 11000)
+        {
+            return res.status(400).json(
+            {
+                errors: { email: "Email already exists!" }
+            });
+        }
+        res.status(500).json({ errors: { general: "Internal Error!" } });
     }
+
 }
 
 const post_login = async (req, res) =>
@@ -49,7 +67,7 @@ const post_login = async (req, res) =>
     {
         const {email, password} = req.body;
         const user = await User.findOne({email});
-        if(!email || !password) return res.status(400).json({message: "All fields are required"});
+        if(!email || !password) return res.status(400).json({errors: { general: "All fields are required!" }});
 
         if(user)
         {
@@ -69,19 +87,20 @@ const post_login = async (req, res) =>
             }
             else 
             {
-                res.status(401).json({ message: "Wrong password" });
+                res.status(401).json({ errors: { password: "Wrong password!" } });
             }
         }
         else 
         {
-            res.status(401).json({ message: "Wrong email" });
+            res.status(401).json({ errors: { email: "Wrong email!" } });
         }
     }
     catch (err)
     {
-        res.status(500).json({ message:"Internal Error" });
+        res.status(500).json({ errors: { general:"Internal Error!" } });
     }
 }
+
 
 const get_logout = (req, res) =>
 {
@@ -95,11 +114,11 @@ const get_logout = (req, res) =>
             secure: false,
             path: '/'
         });
-        res.status(200).json({message: "Logout successful"});
+        res.status(200).json({message: "Logout Successful!"});
     }
     catch (err)
     {
-        res.status(500).json({message: "Logout unsuccessful"});
+        res.status(500).json({errors: {general: "Logout Unsuccessful!"}});
     }
 }
 
@@ -109,6 +128,7 @@ const editProfile = async (req, res) =>
     {
         const userId = req.userId;
         const {name, email} = req.body;
+        if(!email || !name) return res.status(400).json({errors: { general: "All fields are required!" }});
 
         const user = await User.findOneAndUpdate({_id: userId}, {name, email}, {new: true});
         if(user)
@@ -117,12 +137,27 @@ const editProfile = async (req, res) =>
         }
         else 
         {
-            res.status(404).json({message: "User not found"});
+            res.status(404).json({errors: {general: "User not found!"}});
         }
     }
     catch (err)
     {
-        res.status(500).json({message: "Couldnt edit user profile"});
+        if (err.name === "ValidationError")
+        {
+            const errors = {};
+
+            Object.values(err.errors).forEach(e =>
+            {
+                errors[e.path] = e.message;
+            });
+
+            return res.status(400).json({ errors});
+        }
+        if (err.code === 11000)
+        {
+            return res.status(400).json({ errors: { email: "Email already exists!" } });
+        }
+        res.status(500).json({errors: {general: "Couldnt edit user profile!"}});
     }
 }
 
@@ -133,6 +168,7 @@ const editPassword = async (req, res) =>
         const userId = req.userId;
         const user = await User.findById(userId);
         const {oldPassword, newPassword} = req.body;
+        if(!oldPassword, !newPassword) return res.status(400).json({errors: { general: "All fields are required!" }});
         if(user)
         {
             const auth = await bcrypt.compare(oldPassword, user.password);
@@ -140,21 +176,32 @@ const editPassword = async (req, res) =>
             {
                 user.password = newPassword;
                 await user.save();
-                res.status(200).json({ message: "Password updated successfully" });
+                res.status(200).json({ message: "Password updated successfully!" });
             }
             else 
             {
-                return res.status(401).json({ message: "Current password incorrect" });
+                return res.status(401).json({ errors: { oldPassword: "Current password incorrect!" } });
             }
         }
         else 
         {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ errors: { general: "User not found!" } });
         }
     }
     catch (err)
     {
-        res.status(500).json({ message: "Could not update password" });
+        if (err.name === "ValidationError")
+        {
+            const errors = {};
+
+            Object.values(err.errors).forEach(e =>
+            {
+                errors[e.path] = e.message;
+            });
+
+            return res.status(400).json({ errors});
+        }
+        res.status(500).json({ errors: { general: "Could not update password!" } });
     }
 }
 
@@ -163,12 +210,12 @@ const getMe = async (req, res) =>
     try
     {
         const user = await User.findById(req.userId).select("-password");
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(404).json({ errors: { general: "User not found!" } });
         res.status(200).json(user);
     }
     catch (err)
     {
-        res.status(500).json({ message: err.message || "Could not fetch user" });
+        res.status(500).json({ errors: { general: err.message || "Could not fetch user!" } });
     }
 }
 

@@ -11,6 +11,7 @@ const Navbar = () => {
                 <Link to="/signup"><button className="px-3 py-1">Sign Up</button></Link>
                 <Link to="/login"><button className="px-3 py-1 text-blue-600">Log In</button></Link>
                 <Link to="/editProfile"><button className="px-3 py-1">Edit Profile</button></Link>
+                <Link to="/editPassword"><button className="px-3 py-1">Edit Password</button></Link>
                 <Link to="/addTransaction"><button className="px-3 py-1">Add Transaction</button></Link>
                 <Link to="/logout"><button className="px-3 py-1 text-blue-600">Log Out</button></Link>
             </div>

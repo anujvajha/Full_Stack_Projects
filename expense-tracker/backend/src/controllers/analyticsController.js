@@ -1,62 +1,33 @@
 import mongoose from 'mongoose';
 import Transaction from '../models/transactionModel.js';
-const getSummary = async (req, res) =>
-{
-    try 
-    {
-        const userId = req.userId;
-
-        const result = await Transaction.aggregate([
-            {
-                $match: 
-                {
-                    user: new mongoose.Types.ObjectId(userId)
-                }
-            },
-            {
-                $group: 
-                {
-                    _id: "$type",
-                    total: { $sum: "$amount" }
-                }
-            }
-        ]);
-
-        res.status(200).json(result);
-    }
-    catch (err)
-    {
-        res.status(500).json({ message: err.message || "Analytics failed" });
-    }
-};
 
 const categoryExpense = async (req, res) =>
 {
     try
     {
         const userId = req.userId;
-
         const result = await Transaction.aggregate([
             {
-                $match: {
+                $match: 
+                {
                     user: new mongoose.Types.ObjectId(userId),
-                    //type: "Expense"
                 }
             },
             {
-                $group: {
+                $group: 
+                {
                     _id: "$category",
                     total: { $sum: "$amount" }
                 }
             }
         ]);
-
         res.status(200).json(result);
+        
     }
     catch (err)
     {
-        res.status(500).json({ message: err.message || "Category analytics failed" });
+        res.status(500).json({ errors: { general: err.message || "Category analytics failed!" } });
     }
 };
 
-export {categoryExpense, getSummary};
+export {categoryExpense};

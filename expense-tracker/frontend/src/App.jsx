@@ -7,6 +7,7 @@ import AddTransaction from './components/AddTransaction';
 import Logout from './components/logout';
 import Footer from './components/footer';
 import EditProfile from './components/EditProfile';
+import EditPassword from "./components/EditPassword";
 
 
 function App() {
@@ -22,11 +23,13 @@ function App() {
         <Route path="/addTransaction" element={<AddTransaction />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/editPassword" element={<EditPassword />} />
       </Routes>
       <Footer />
     </Router>
     </>
   )
+
 }
 
 export default App

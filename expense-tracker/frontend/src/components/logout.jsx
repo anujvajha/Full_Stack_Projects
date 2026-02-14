@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState({});
 
   useEffect(() => 
    {
@@ -23,8 +23,16 @@ const Logout = () => {
             } 
             catch (err)
             {
-                const message = "Couldnt Log Out";
-                setError(message);
+                const backendErrors = err.response?.data?.errors;
+
+                if (backendErrors)
+                {
+                    setError(backendErrors);
+                }
+                else
+                {
+                    setError({ general: "Couldnt Log Out" });
+                }
             }
         };
 
@@ -33,7 +41,7 @@ const Logout = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black text-gray-100">
-      {error && <p className="text-red-400 text-lg font-medium">{error}</p>}
+      {error.general && <p className="text-red-400 text-lg font-medium">{error.general}</p>}
       {!error && <h2 className="text-xl font-semibold animate-pulse">Logging out...</h2>}
     </div>
 

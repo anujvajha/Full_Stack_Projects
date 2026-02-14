@@ -7,27 +7,27 @@ const transactionSchema = new mongoose.Schema
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
-      required: true
+      required: [true, "User is required!"]
     },
 
     type: 
     {
       type: String,
-      enum: ["Income", "Expense"],
-      required: true
+      enum: { values: ["Income", "Expense"], message: "Type must be Income or Expense!" },
+      required: [true, "Type is required!"]
     },
 
     amount: 
     {
       type: Number,
-      required: true,
-      min: [1, "Amount must be greater than 0"]
+      required: [true, "Amount is required!"],
+      min: [1, "Amount must be greater than 0!"]
     },
 
     category: 
     {
       type: String,
-      required: true,
+      required: [true, "Category is required!"],
       trim: true
     },
 
@@ -35,17 +35,13 @@ const transactionSchema = new mongoose.Schema
     {
       type: Date,
       default: Date.now,
-      required: true
+      required: [true, "Date is required!"]
     },
 
-    // paymentMethod: 
-    // {
-    //   type: String,
-    //   enum: ["Cash", "Card", "UPI", "Bank Transfer"],
-    //   required: true
-    // },
-
-    note: String
+    note: 
+    {
+      type: String,
+    }
   },
 
   { timestamps: true }

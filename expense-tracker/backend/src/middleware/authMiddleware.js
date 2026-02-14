@@ -15,12 +15,12 @@ const requireAuth = (req, res, next) =>
         catch (err)
         {
             res.clearCookie("jwt");
-            return res.status(401).json({ message: "Please login/ signup" });
+            return res.status(401).json({ errors: { general: "Please login/ signup!" } });
         }
     }
     else 
     {
-        return res.status(401).json({ error: "Please login/ signup" });
+        return res.status(401).json({ errors: { general: "Please login/ signup!" } });
     }
 }
 
