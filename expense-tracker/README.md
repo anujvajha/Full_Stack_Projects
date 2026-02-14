@@ -14,14 +14,13 @@ Track your income and expenses, visualize your spending, and manage transactions
 - **Database:** MongoDB Atlas  
 
 ## Install and Run
-#Terminal 1 (Backend)
-```bash
+
+#Terminal 1 (BackEnd)
 cd backend
 npm install 
 npm start 
 
-#Terminal 2 (Backend)
-```bash
+#Terminal 2 (FrontEnd)
 cd frontend
 npm install 
 npm start 
