@@ -15,15 +15,19 @@ Track your income and expenses, visualize your spending, and manage transactions
 
 ## Install and Run
 
-#Terminal 1 (BackEnd)
+### Backend
+```bash
 cd backend
-npm install 
-npm start 
+npm install
+npm start
 
-#Terminal 2 (FrontEnd)
-cd frontend
-npm install 
-npm start 
+### Backend
+```bash
+cd backend
+npm install
+npm start
+
+
 
 
 
