@@ -15,14 +15,14 @@ Track your income and expenses, visualize your spending, and manage transactions
 
 ## Install and Run
 
-### Backend
 ```bash
+### BackEnd
 cd backend
 npm install
 npm start
 
-### Backend
-cd backend
+### FrontEnd
+cd frontend
 npm install
 npm start
 
