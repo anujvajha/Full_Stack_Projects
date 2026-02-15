@@ -29,11 +29,11 @@ const post_signup = async (req, res) =>
                 secure: false,
                 path: '/'
             });
-            res.status(201).json({user: user._id});
+            res.status(201).json({success: true, data: {user: user._id}});
         }
         else 
         {
-            res.status(400).json({ errors: { general: "Signup failed!" } });
+            res.status(500).json({success: false, message: "Signup failed!"});
         }
     }
     catch (err)
@@ -47,16 +47,17 @@ const post_signup = async (req, res) =>
                 errors[e.path] = e.message;
             });
 
-            return res.status(400).json({ errors});
+            return res.status(400).json({success: false, errors});
         }
         if (err.code === 11000)
         {
             return res.status(400).json(
             {
+                success: false,
                 errors: { email: "Email already exists!" }
             });
         }
-        res.status(500).json({ errors: { general: "Internal Error!" } });
+        res.status(500).json({success: false, message: "Internal Error!"});
     }
 
 }
@@ -66,9 +67,9 @@ const post_login = async (req, res) =>
     try 
     {
         const {email, password} = req.body;
-        const user = await User.findOne({email});
-        if(!email || !password) return res.status(400).json({errors: { general: "All fields are required!" }});
+        if(!email || !password) return res.status(400).json({success: false, message: "All fields are required!" });
 
+        const user = await User.findOne({email});
         if(user)
         {
             const auth = await bcrypt.compare(password, user.password);
@@ -83,21 +84,21 @@ const post_login = async (req, res) =>
                     secure: false,
                     path: '/'
                 });
-                res.status(200).json({user: user._id});
+                res.status(200).json({success: true, data: {user: user._id}});
             }
             else 
             {
-                res.status(401).json({ errors: { password: "Wrong password!" } });
+                res.status(401).json({success: false, message: "Wrong password!" });
             }
         }
         else 
         {
-            res.status(401).json({ errors: { email: "Wrong email!" } });
+            res.status(401).json({success: false, message: "Wrong email!" });
         }
     }
     catch (err)
     {
-        res.status(500).json({ errors: { general:"Internal Error!" } });
+        res.status(500).json({success: false, message:"Internal Error!" });
     }
 }
 
@@ -114,11 +115,11 @@ const get_logout = (req, res) =>
             secure: false,
             path: '/'
         });
-        res.status(200).json({message: "Logout Successful!"});
+        res.status(200).json({success: true, message: "Logout Successful!"});
     }
     catch (err)
     {
-        res.status(500).json({errors: {general: "Logout Unsuccessful!"}});
+        res.status(500).json({success: false, message: "Logout Unsuccessful!"});
     }
 }
 
@@ -127,12 +128,12 @@ const getMe = async (req, res) =>
     try
     {
         const user = await User.findById(req.userId).select("-password");
-        if (!user) return res.status(404).json({ errors: { general: "User not found!" } });
-        res.status(200).json(user);
+        if (!user) return res.status(404).json({success: false, message: "User not found!" });
+        res.status(200).json({success: true, data: user});
     }
     catch (err)
     {
-        res.status(500).json({ errors: { general: err.message || "Could not fetch user!" } });
+        res.status(500).json({success: false, message: err.message || "Could not fetch user!" });
     }
 }
 
