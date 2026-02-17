@@ -16,11 +16,9 @@ const conversationSchema = new mongoose.Schema
             type: mongoose.Schema.Types.ObjectId,
             ref: 'message'
         },
-        timestamps:
-        {
-            createdAt : "created_at",
-            updatedAt : "updated_at",
-        } 
+    },
+    {
+        timestamps: true
     }
 )
 

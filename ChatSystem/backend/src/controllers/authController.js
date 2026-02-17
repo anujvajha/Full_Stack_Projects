@@ -137,4 +137,18 @@ const getMe = async (req, res) =>
     }
 }
 
-export {post_signup, post_login, get_logout, getMe};
+const get_users = async (req, res) =>
+{
+    try
+    {
+        const users = await User.find({_id: {$ne: req.userId}})
+        if (!users) return res.status(404).json({success: false, message: "Users not found!" });
+        res.status(200).json({success: true, data: users});
+    }
+    catch (err)
+    {
+        res.status(500).json({success: false, message: err.message || "Could not fetch the users!" });
+    }
+}
+
+export {post_signup, post_login, get_logout, getMe, get_users};

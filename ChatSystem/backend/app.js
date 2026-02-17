@@ -1,14 +1,18 @@
 import express from 'express';
 import dotenv from 'dotenv'
 import cors from 'cors';
-dotenv.config()
 import cookieParser from 'cookie-parser';
-import authRoutes from './src/routes/authRoutes.js';
 import mongoose from 'mongoose';
+dotenv.config();
 
 import http from 'http';
 import {Server} from 'socket.io';
 import Conv from './src/models/conversationModel.js';
+import Msg from './src/models/messageModel.js';
+import authRoutes from './src/routes/authRoutes.js';
+import convRoutes from './src/routes/convRoutes.js';
+
+
 
 const PORT = process.env.PORT || 5001;
 const app = express();
@@ -23,10 +27,12 @@ app.use(cors({
 }));
 
 app.use(authRoutes);
+app.use(convRoutes);
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
+const io = new Server(server, 
+{
     cors: 
     {
         origin: 'http://localhost:5173',
@@ -35,7 +41,7 @@ const io = new Server(server, {
     }
 });
 
-let onlineUsers = new map ();
+let onlineUsers = new Map ();
 
 
 io.on("connection", (socket) => 
