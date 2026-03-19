@@ -8,7 +8,6 @@ const Home = () => {
     const [transactions, setTransactions] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const navigate = useNavigate();
-    const [error, setError] = useState({});
 
     useEffect (() => 
     {
@@ -25,8 +24,7 @@ const Home = () => {
             }
             catch (err)
             {
-                const backendError = err.response?.data?.errors?.general;
-                setError({ general: backendError || "Couldnt fetch transactions!" });
+                console.log("Fetch transactions failed:", err.response?.data || err.message);
                 setIsLoggedIn(false);
             }
         }
@@ -47,8 +45,7 @@ const Home = () => {
         }
         catch (err)
         {
-            const backendError = err.response?.data?.errors?.general;
-            setError({ general: backendError || "Couldnt Delete the transaction" });
+            console.log("Delete transaction failed:", err.response?.data || err.message);
         }
     }
 

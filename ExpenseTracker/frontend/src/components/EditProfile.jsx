@@ -6,7 +6,6 @@ const EditProfile = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState({});
 
   const navigate = useNavigate();
 
@@ -22,6 +21,7 @@ const EditProfile = () => {
         } 
         catch (err) 
         {
+            console.log("Fetch user failed:", err.message);
             navigate("/login");
         }
     };
@@ -38,22 +38,13 @@ const EditProfile = () => {
         } 
         catch (err)
         {
-            const backendErrors = err.response?.data?.errors;
-            if(backendErrors)
-            {
-                setError(backendErrors);
-            }
-            else
-            {
-                setError({ general: err.response?.data?.message || "Couldnt Edit the Profile" });
-            }
+            console.log("Edit profile failed:", err.response?.data || err.message);
         }
    };
 
   return (
     <div className="edit-profile flex mt-34 justify-center  bg-black text-gray-100">
       <form onSubmit={handleSubmit} className="flex flex-col w-80 p-6 space-y-4 bg-zinc-900 rounded-xl shadow-md border border-zinc-800">
-        {error.general && <p className="text-red-400">{error.general}</p>}
         
         <label><b>Name</b></label>
         <input
@@ -61,11 +52,9 @@ const EditProfile = () => {
           value={name}
           onChange={e => {
             setName(e.target.value);
-            setError(prev => ({ ...prev, name: null }));
           }}
           className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {error.name && <p className="text-red-400">{error.name}</p>}
 
         <label><b>Email</b></label>
         <input
@@ -73,11 +62,9 @@ const EditProfile = () => {
           value={email}
           onChange={e => {
             setEmail(e.target.value);
-            setError(prev => ({ ...prev, email: null }));
           }}
           className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {error.email && <p className="text-red-400">{error.email}</p>}
 
         <button className="bg-blue-900 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update Profile</button>
       </form>

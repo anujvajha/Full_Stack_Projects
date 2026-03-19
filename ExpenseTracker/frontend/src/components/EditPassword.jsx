@@ -6,7 +6,6 @@ const EditPassword = () => {
 
   const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
-  const [error, setError] = useState({});
 
   const navigate = useNavigate();
 
@@ -20,6 +19,7 @@ const EditPassword = () => {
         } 
         catch (err) 
         {
+            console.log("Auth check failed:", err.message);
             navigate("/login");
         }
     };
@@ -36,22 +36,13 @@ const EditPassword = () => {
         } 
         catch (err)
         {
-            const backendErrors = err.response?.data?.errors;
-            if (backendErrors)
-            {
-                setError(backendErrors);
-            }
-            else
-            {
-                setError({ general: err.response?.data?.message || "Couldnt Change the Password" });
-            }
+            console.log("Change password failed:", err.response?.data || err.message);
         }
    };
 
   return (
     <div className="edit-profile flex mt-34 justify-center  bg-black text-gray-100">
       <form onSubmit={handleSubmit} className="flex flex-col w-80 p-6 space-y-4 bg-zinc-900 rounded-xl shadow-md border border-zinc-800">
-        {error.general && <p className="text-red-400">{error.general}</p>}
         
         <label><b>Old Password</b></label>
         <input
@@ -60,11 +51,9 @@ const EditPassword = () => {
           value={oldPassword}
           onChange={e => {
             setOldPassword(e.target.value);
-            setError(prev => ({ ...prev, oldPassword: null }));
           }}
           className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {error.oldPassword && <p className="text-red-400">{error.oldPassword}</p>}
 
         <label><b>New Password</b></label>
         <input
@@ -73,11 +62,9 @@ const EditPassword = () => {
           value={newPassword}
           onChange={e => {
             setNewPassword(e.target.value);
-            setError(prev => ({ ...prev, newPassword: null }));
           }}
           className="bg-zinc-800 text-white border border-zinc-700 p-3 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {error.newPassword && <p className="text-red-400">{error.newPassword}</p>}
 
         <button className="bg-blue-900 text-white p-3 rounded-lg hover:bg-blue-700 transition">Change Password</button>
       </form>
