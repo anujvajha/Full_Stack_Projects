@@ -5,7 +5,6 @@ const Home = ({search}) => {
 
     const [products, setProducts] = useState([]);
     const [qty, setQty] = useState({});
-    const [error, setError] = useState("");
 
     useEffect(() => 
     {
@@ -21,14 +20,7 @@ const Home = ({search}) => {
             }
             catch (err)
             {
-                if (err.response && err.response.data && err.response.data.errors)
-                {
-                    setError(err.response.data.errors);
-                }
-                else
-                {
-                    setError(err.message);
-                }
+                console.log("Error fetching products:", err.message);
             }
         }
         fetchProducts();    
@@ -48,22 +40,13 @@ const Home = ({search}) => {
         } 
         catch (err)
         {
-            if (err.response && err.response.data && err.response.data.errors)
-            {
-                setError(Object.values(err.response.data.errors).join(", "));
-            }
-            else
-            {
-                setError("add to cart failed");
-            }
+            console.log("Add to cart failed:", err.message);
         }
     };
 
 
     return ( 
         <div className={`products-grid ${filteredProducts.length === 1 ? 'center-grid' : ''}`}>
-
-            {error && <h3 style={{color:"red"}}>{error}</h3>}
 
             {
                 filteredProducts.map((product) => (

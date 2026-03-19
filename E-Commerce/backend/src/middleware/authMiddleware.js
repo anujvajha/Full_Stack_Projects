@@ -5,7 +5,8 @@ const requireAuth = (req, res, next) =>
 
       if (!token) 
       {
-        return res.status(401).json({ errors: { general: "Unauthorized User! Please login/signup!" } });
+        console.log("Unauthorized access: no token");
+        return res.status(401).json({ message: "Unauthorized User! Please login/signup!" });
       }
 
       try 
@@ -16,8 +17,9 @@ const requireAuth = (req, res, next) =>
       } 
       catch (err) 
       {
+        console.log("Unauthorized access: invalid token", err.message);
         res.clearCookie("jwt");
-        return res.status(401).json({ errors: { general: "Unauthorized User! Please login/signup!" } });
+        return res.status(401).json({ message: "Unauthorized User! Please login/signup!" });
       }
 };
 

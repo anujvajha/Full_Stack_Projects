@@ -1,12 +1,11 @@
-import {useNavigate} from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import axios from 'axios';
 
 const LogOut = () => {
     const navigate = useNavigate();
-    const [error, setError] = useState("");
 
-    useEffect( () => 
+    useEffect(() => 
     {
         const logout = async () => 
         {
@@ -21,23 +20,15 @@ const LogOut = () => {
             } 
             catch (err) 
             {
-                if (err.response && err.response.data && err.response.data.errors)
-                {
-                    setError(Object.values(err.response.data.errors).join(", "));
-                }
-                else
-                {
-                    setError(err.message);
-                }
+                console.log("Logout failed:", err.message);
             }
         }
         logout();
-    }, [navigate])
+    }, [navigate]);
 
     return (
         <div className="logout">
-            {error && <h3 style={{color:"red"}}>{error}</h3>}
-            {!error && <h3>Logging out...</h3>}
+            <h3>Logging out...</h3>
         </div>
     );
 }

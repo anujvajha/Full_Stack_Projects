@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const ViewCart = () => {
     const [cart, setCart] = useState([]);
-    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => 
@@ -21,14 +20,7 @@ const ViewCart = () => {
             }
             catch (err)
             {
-                if (err.response && err.response.data && err.response.data.errors)
-                {
-                    setErrors(err.response.data.errors);
-                }
-                else
-                {
-                    setErrors({ general: err.message });
-                }
+                console.log("Error fetching cart:", err.message);
             }
         }
         
@@ -50,35 +42,27 @@ const ViewCart = () => {
 
 
     const handlePay = async () => {
-    try 
-    {
-        setErrors({});
-        const res = await axios.post("http://localhost:5001/payment", { amount: price_pay }, { withCredentials: true });
+        try 
+        {
+            const res = await axios.post("http://localhost:5001/payment", { amount: price_pay }, { withCredentials: true });
 
-        if (res.data.success) 
+            if (res.data.success) 
+            {
+                alert('Payment Successful \nThank You for shopping with us!');
+                navigate("/");
+                setCart([]);
+            }
+        } 
+        catch (err) 
         {
-            alert('Payment Successful \nThank You for shopping with us!');
-            navigate("/");
-            setCart([]);
+            console.log("Payment failed:", err.message);
         }
-    } 
-    catch (err) 
-    {
-        if (err.response && err.response.data && err.response.data.errors)
-        {
-            setErrors(err.response.data.errors);
-        }
-        else
-        {
-            setErrors({ general: err.message });
-        }
-    }};
+    };
 
     const handleDelete = async (id) => 
     {
         try 
         {
-            setErrors({});
             const res = await axios.delete(`http://localhost:5001/deleteitem/${id}`,{ withCredentials: true });
             if (res.status === 200) 
             {
@@ -86,27 +70,18 @@ const ViewCart = () => {
             } 
             else 
             {
-                setErrors({ general: "Delete failed" });
+                console.log("Delete failed");
             }
         } 
         catch (err) 
         {
-            if (err.response && err.response.data && err.response.data.errors)
-            {
-                setErrors(Object.values(err.response.data.errors).join(", "));
-            }
-            else
-            {
-                setErrors({ general: err.message });
-            }
+            console.log("Delete failed:", err.message);
         }
     };
 
     return (
         <div className="viewcart">
            { cart.length!==0 &&  <h2>Your Cart</h2> } 
-
-           {errors.general && <p className="error">{errors.general}</p>}
 
             {cart.length === 0 ? (
                 <h2>Your cart is empty.</h2>

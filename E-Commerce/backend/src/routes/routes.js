@@ -1,5 +1,7 @@
 const express = require('express');
-const { post_signup, post_login, getLogout, getProducts, addtocart, viewcart, payment, deleteitem } = require('../controllers/controllers');
+const { post_signup, post_login, getLogout} = require('../controllers/authController');
+const { getProducts, addtocart, viewcart, payment, deleteitem } = require('../controllers/cartController');
+
 const router = express.Router();
 const requireAuth = require('../middleware/authMiddleware.js');
 

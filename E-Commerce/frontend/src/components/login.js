@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,35 +6,26 @@ const LogIn = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => 
     {
         e.preventDefault();
-        const user = {email, password };
+        const user = { email, password };
         try 
         {
-            const res = await axios.post('http://localhost:5001/login', user, {withCredentials: true});
+            const res = await axios.post('http://localhost:5001/login', user, { withCredentials: true });
             if(res.status===200) navigate("/");
         }
         catch (err)
         {
-            if (err.response && err.response.data && err.response.data.errors)
-            {
-                setError(Object.values(err.response.data.errors).join(", "));
-            }
-            else
-            {
-                setError(err.message);
-            }
+            console.log("Login failed:", err.message);
         }
     };
 
     return ( 
         <div className='login'>
             <form onSubmit={handleSubmit}>
-                {error && <h3 style={{color:"red"}}>{error}</h3>}
 
                 <label><b>Email</b></label>
                 <input type="email" placeholder="Enter Email" value={email} onChange={(e) => setEmail(e.target.value)} ></input>
