@@ -28,7 +28,7 @@ const Home = ({search}) => {
     }, []);
 
     const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(search.toLowerCase())
+        product.name.toLowerCase().includes((search || "").toLowerCase())
     );
 
 
@@ -75,3 +75,5 @@ const Home = ({search}) => {
     );
 }
 export default Home;
+
+

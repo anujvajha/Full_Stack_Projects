@@ -11,7 +11,6 @@ const createToken = (id) =>
     { id }, process.env.JWT_SECRET,
     {
         expiresIn: maxAge,
-        noTimestamp: true
     });
 
 };
@@ -40,43 +39,44 @@ const post_signup = async (req, res) =>
     }
 };
 
+
 const post_login = async (req, res) => 
 {
     try 
     {
         const { email, password } = req.body;
 
+        console.log("Entered email:", email);
+        console.log("Entered password:", password);
+
         const user = await User.findOne({ email });
+
+        console.log("User from DB:", user);
+
         if (!user) 
         {
-            console.log("Login failed: wrong email");
             return res.status(401).json({ message: "Login failed" });
         }
 
-        if (user)
+        const auth = await bcrypt.compare(password, user.password);
+
+        console.log("Password match:", auth);
+        console.log("Stored hashed password:", user.password);
+
+        if(auth)
         {
-            const auth = await bcrypt.compare(password, user.password);
-            if(auth)
-            {
-                const token = createToken(user._id);
-                res.cookie('jwt', token, {
-                    httpOnly: true,
-                    maxAge: maxAge * 1000,
-                    sameSite: 'lax',
-                    secure: false,
-                    path: '/'       
-                });
-                res.status(200).json({ user: user._id });
-            }
-            else 
-            {
-                console.log("Login failed: wrong password");
-                return res.status(401).json({ message: "Login failed" });
-            }
+            const token = createToken(user._id);
+            res.cookie('jwt', token, {
+                httpOnly: true,
+                maxAge: maxAge * 1000,
+                sameSite: 'lax',
+                secure: false,
+                path: '/'       
+            });
+            res.status(200).json({ user: user._id });
         }
         else 
         {
-            console.log("Login failed: wrong email");
             return res.status(401).json({ message: "Login failed" });
         }
  
